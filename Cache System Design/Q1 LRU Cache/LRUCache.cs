@@ -3,11 +3,14 @@
 public class LRUCache
 {
     private int _capacity;
-    private Dictionary<int, LinkedListNode<LRUCacheItem>> _cache = new Dictionary<int, LinkedListNode<LRUCacheItem>>();
-    private LinkedList<LRUCacheItem> _list = new LinkedList<LRUCacheItem>();
+    private Dictionary<int, LinkedListNode<LRUCacheItem>> _cache = new();
+    private LinkedList<LRUCacheItem> _list = new();
 
     public LRUCache(int capacity)
     {
+        if (capacity <= 0)
+            throw new ArgumentException($"{nameof(capacity)} needs to be positive.");
+
         _capacity = capacity;
     }
 
@@ -42,4 +45,13 @@ public class LRUCache
     }
 }
 
-public record LRUCacheItem(int key, int value);
+public struct LRUCacheItem
+{
+    public int key;
+    public int value;
+    public LRUCacheItem(int key, int value)
+    {
+        this.key = key;
+        this.value = value;
+    }
+}
