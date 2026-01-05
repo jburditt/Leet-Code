@@ -2,51 +2,59 @@
 
 public class LRUCache
 {
-    private Dictionary<int, int> _cache = new();
-    private Queue<int> _queue = new();
-    private int _capacity;
+    private int capacity;
+    private Dictionary<int, LinkedListNode<LRUCacheItem>> cache = new Dictionary<int, LinkedListNode<LRUCacheItem>>();
+    private LinkedList<LRUCacheItem> list = new LinkedList<LRUCacheItem>();
 
     public LRUCache(int capacity)
     {
-        if (capacity < 0)
-            throw new ArgumentException($"{nameof(capacity)} needs to be positive.");
-        _capacity = capacity;
-        _queue = new Queue<int>(capacity);
+        this.capacity = capacity;
     }
 
     public int Get(int key)
     {
-        if (_cache.ContainsKey(key))
+        if (cache.TryGetValue(key, out var node))
         {
-            MoveToFront(key);
-            return _cache[key];
+            list.Remove(node);
+            list.AddLast(node);
+            return node.Value.value;
         }
         return -1;
     }
 
     public void Put(int key, int value)
     {
-        if (_cache.ContainsKey(key))
+        if (cache.TryGetValue(key, out var existingNode))
         {
-            _cache[key] = value;
-            MoveToFront(key);
-        } 
-        else
-        {
-            _cache[key] = value;
-            _queue.Enqueue(key);
-            if (_cache.Count > _capacity)
-            {
-                var oldestKey = _queue.Dequeue();
-                _cache.Remove(oldestKey);
-            }
+            list.Remove(existingNode);
         }
+        else if (cache.Count >= capacity)
+        {
+            RemoveFirst();
+        }
+
+        var cacheItem = new LRUCacheItem(key, value);
+        var node = new LinkedListNode<LRUCacheItem>(cacheItem);
+        list.AddLast(node);
+        cache[key] = node;
     }
 
-    private void MoveToFront(int key)
+    private void RemoveFirst()
     {
-        var newQueueList = _queue.Where(k => k != key);
-        _queue = new Queue<int>(newQueueList);
-        _queue.Enqueue(key);
+        var node = list.First;
+        list.RemoveFirst();
+        cache.Remove(node.Value.key);
+    }
+}
+
+public class LRUCacheItem
+{
+    public int key;
+    public int value;
+
+    public LRUCacheItem(int key, int value)
+    {
+        this.key = key;
+        this.value = value;
     }
 }
