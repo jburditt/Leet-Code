@@ -2,21 +2,21 @@
 
 public class LRUCache
 {
-    private int capacity;
-    private Dictionary<int, LinkedListNode<LRUCacheItem>> cache = new Dictionary<int, LinkedListNode<LRUCacheItem>>();
-    private LinkedList<LRUCacheItem> list = new LinkedList<LRUCacheItem>();
+    private int _capacity;
+    private Dictionary<int, LinkedListNode<LRUCacheItem>> _cache = new Dictionary<int, LinkedListNode<LRUCacheItem>>();
+    private LinkedList<LRUCacheItem> _list = new LinkedList<LRUCacheItem>();
 
     public LRUCache(int capacity)
     {
-        this.capacity = capacity;
+        _capacity = capacity;
     }
 
     public int Get(int key)
     {
-        if (cache.TryGetValue(key, out var node))
+        if (_cache.TryGetValue(key, out var node))
         {
-            list.Remove(node);
-            list.AddLast(node);
+            _list.Remove(node);
+            _list.AddLast(node);
             return node.Value.value;
         }
         return -1;
@@ -24,37 +24,22 @@ public class LRUCache
 
     public void Put(int key, int value)
     {
-        if (cache.TryGetValue(key, out var existingNode))
+        if (_cache.TryGetValue(key, out var existingNode))
         {
-            list.Remove(existingNode);
+            _list.Remove(existingNode);
         }
-        else if (cache.Count >= capacity)
+        else if (_cache.Count >= _capacity)
         {
-            RemoveFirst();
+            var first = _list.First;
+            _list.RemoveFirst();
+            _cache.Remove(first.Value.key);
         }
 
         var cacheItem = new LRUCacheItem(key, value);
         var node = new LinkedListNode<LRUCacheItem>(cacheItem);
-        list.AddLast(node);
-        cache[key] = node;
-    }
-
-    private void RemoveFirst()
-    {
-        var node = list.First;
-        list.RemoveFirst();
-        cache.Remove(node.Value.key);
+        _list.AddLast(node);
+        _cache[key] = node;
     }
 }
 
-public class LRUCacheItem
-{
-    public int key;
-    public int value;
-
-    public LRUCacheItem(int key, int value)
-    {
-        this.key = key;
-        this.value = value;
-    }
-}
+public record LRUCacheItem(int key, int value);
