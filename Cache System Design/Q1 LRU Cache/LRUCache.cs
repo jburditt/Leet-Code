@@ -1,5 +1,7 @@
 ﻿namespace Tests.Cache_System_Design.LRU_Cache;
 
+// 38 ms beats 36.85%
+// 174.19 MB beats 76.74%
 public class LRUCache
 {
     private int _capacity;
@@ -31,7 +33,7 @@ public class LRUCache
         {
             _list.Remove(existingNode);
         }
-        else if (_cache.Count >= _capacity)
+        else if (_cache.Count > _capacity)
         {
             var first = _list.First;
             _list.RemoveFirst();
