@@ -9,13 +9,13 @@ public class Test
     public void Test_Case_1()
     {
         var lFUCache = new LFUCache(2);
-        lFUCache.Put(1, 1); // cache is {1=1}
-        lFUCache.Put(2, 2); // cache is {1=1, 2=2}
-        var result = lFUCache.Get(1);    
+        lFUCache.Put(1, 1);             // cache is {1=1,1}
+        lFUCache.Put(2, 2);             // cache is {2=2,1; 1=1,1}
+        var result = lFUCache.Get(1);   // cache is {2=2,1; 1=1,2}
         Assert.AreEqual(1, result);
 
-        lFUCache.Put(3, 3); // LRU key was 2, evicts key 2, cache is {1=1, 3=3}
-        result = lFUCache.Get(2);    // returns -1 (not found)
+        lFUCache.Put(3, 3);             // evicts key 2, cache is {3=3,1; 1=1,2}
+        result = lFUCache.Get(2);       
         Assert.AreEqual(-1, result);
 
         result = lFUCache.Get(3);    // cache is {1=1, 3=3}
@@ -30,6 +30,18 @@ public class Test
 
         result = lFUCache.Get(4);    // return 4
         Assert.AreEqual(4, result);
+    }
+
+    [TestMethod]
+    public void Test_Case_10()
+    {
+        var lFUCache = new LFUCache(2);
+        lFUCache.Put(3, 1);             // cache is {3=1,1}
+        lFUCache.Put(2, 1);             // cache is {3=1,1; 2=1,1}
+        lFUCache.Put(2, 2);             // updates 2, cache is {3=3,1; 2=2,2}
+        lFUCache.Put(4, 4);             // evicts 3, cache is {4=4,1; 2=2,2}
+        var result = lFUCache.Get(2);
+        Assert.AreEqual(2, result);
     }
 
     [TestMethod]

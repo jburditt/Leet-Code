@@ -1,27 +1,29 @@
 ﻿namespace Tests.Cache_System_Design.LFU_Cache;
 
+// NOTE first/head is least frequent and last/tail is the most frequent
 public class LFUCache
 {
-    private HashedLinkedList _cache;
+    private HashedLinkedList _list;
     private int _capacity;
 
     public LFUCache(int capacity)
     {
         _capacity = capacity;
-        _cache = new(capacity);
+        _list = new(capacity);
     }
 
     public int Get(int key)
     {
-        return _cache.Get(key);
+        return _list.Get(key);
     }
 
     public void Put(int key, int value)
     {
-        _cache.Put(key, value);
+        _list.Put(key, value);
     }
 }
 
+// TODO abstract HashedLinkedList from LFUCacheList
 public class HashedLinkedList
 {
     private Dictionary<int, LinkedListNode<LFUNode>> _cache = new();
@@ -52,27 +54,25 @@ public class HashedLinkedList
         }
         else
         {
-            Insert(key, value);
             // check capacity
-            if (_list.Count > _capacity)
+            if (_list.Count >= _capacity)
             {
                 _cache.Remove(_list.First.Value.Key);
                 _list.RemoveFirst();
             }
+            Insert(key, value);
         }
     }
 
     private void Update(int key)
     {
         var node = _cache[key];
-        var value = node.Value;
-        value.Count++;
-        value.Timestamp = DateTime.Now.Ticks;
+        node.Value.Update();
 
         // check if this node should be promoted
         if (node.Next != null 
-            && (node.Next.Value.Count > node.Value.Count 
-                || (node.Next.Value.Count == node.Value.Count && node.Next.Value.Timestamp > node.Value.Timestamp)))
+            && (node.Next.Value.Count < node.Value.Count 
+                || (node.Next.Value.Count == node.Value.Count && node.Next.Value.Timestamp < node.Value.Timestamp)))
         {
             // swap values
             _cache[node.Value.Key] = node.Next;
@@ -85,8 +85,8 @@ public class HashedLinkedList
     private void Insert(int key, int value)
     {
         var node = new LFUNode(key, value, 1, DateTime.Now.Ticks);
-        _list.AddLast(node);
-        _cache[key] = _list.Last;
+        _list.AddFirst(node);
+        _cache[key] = _list.First;
     }
 
     public static void Swap(LinkedListNode<LFUNode> first, LinkedListNode<LFUNode> second)
@@ -97,7 +97,7 @@ public class HashedLinkedList
     }
 }
 
-public struct LFUNode
+public class LFUNode
 {
     public int Key, Value, Count;
     public long Timestamp;
@@ -108,5 +108,11 @@ public struct LFUNode
         Value = value;
         Count = count;
         Timestamp = timestamp;
+    }
+
+    public void Update()
+    {
+        Count++;
+        Timestamp = DateTime.Now.Ticks;
     }
 }
