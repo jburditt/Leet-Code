@@ -56,8 +56,8 @@ public class HashedLinkedList
             // check capacity
             if (_list.Count > _capacity)
             {
-                _cache.Remove(_list.Last.Value.Key);
-                _list.RemoveLast();
+                _cache.Remove(_list.First.Value.Key);
+                _list.RemoveFirst();
             }
         }
     }
@@ -85,8 +85,8 @@ public class HashedLinkedList
     private void Insert(int key, int value)
     {
         var node = new LFUNode(key, value, 1, DateTime.Now.Ticks);
-        _list.AddFirst(node);
-        _cache[key] = _list.First;
+        _list.AddLast(node);
+        _cache[key] = _list.Last;
     }
 
     public static void Swap(LinkedListNode<LFUNode> first, LinkedListNode<LFUNode> second)
