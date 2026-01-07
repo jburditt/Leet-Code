@@ -1,5 +1,5 @@
 ﻿[TestClass]
-public class _2_Two_Sum
+public class _2_Add_Two_Numbers
 {
     public class ListNode 
     {
