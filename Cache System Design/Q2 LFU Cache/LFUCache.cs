@@ -88,7 +88,10 @@ public class HashedLinkedList
         var node = new LFUNode(key, value, 1, DateTime.Now.Ticks);
         if (_list.First?.Value.Count == 1)
         {
-            _cache[key] = _list.AddAfter(_list.First, node);
+            var lastNodeWithValueOne = _list.First;
+            while (lastNodeWithValueOne.Next?.Value.Count == 1)
+                lastNodeWithValueOne = lastNodeWithValueOne.Next;
+            _cache[key] = _list.AddAfter(lastNodeWithValueOne, node);
         }
         else
         {
