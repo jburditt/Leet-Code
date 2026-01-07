@@ -51,6 +51,7 @@ public class HashedLinkedList
         if (_cache.ContainsKey(key))
         {
             Update(key);
+            _cache[key].Value.SetValue(value);
         }
         else
         {
@@ -85,8 +86,14 @@ public class HashedLinkedList
     private void Insert(int key, int value)
     {
         var node = new LFUNode(key, value, 1, DateTime.Now.Ticks);
-        _list.AddFirst(node);
-        _cache[key] = _list.First;
+        if (_list.First?.Value.Count == 1)
+        {
+            _cache[key] = _list.AddAfter(_list.First, node);
+        }
+        else
+        {
+            _cache[key] = _list.AddFirst(node);
+        }
     }
 
     public static void Swap(LinkedListNode<LFUNode> first, LinkedListNode<LFUNode> second)
@@ -114,5 +121,10 @@ public class LFUNode
     {
         Count++;
         Timestamp = DateTime.Now.Ticks;
+    }
+
+    public void SetValue(int value)
+    {
+        Value = value;
     }
 }
