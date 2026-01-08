@@ -1,6 +1,9 @@
 ﻿namespace Tests.Cache_System_Design.LFU_Cache;
 
-// NOTE first/head is least frequent and last/tail is the most frequent
+// 844 ms beats 5.21%
+// 181.16 MB beats 51.79%
+
+// NOTE first is least frequent and last is the most frequent
 public class LFUCache
 {
     private HashedLinkedList _list;
@@ -29,6 +32,7 @@ public class HashedLinkedList
     private Dictionary<int, LinkedListNode<LFUNode>> _cache = new();
     private LinkedList<LFUNode> _list = new();
     private int _capacity;
+    private LinkedListNode<LFUNode>? _lastInserted;
 
     public HashedLinkedList(int capacity)
     {
@@ -58,7 +62,10 @@ public class HashedLinkedList
             // check capacity
             if (_list.Count >= _capacity)
             {
-                _cache.Remove(_list.First.Value.Key);
+                var firstNode = _list.First;
+                if (firstNode == _lastInserted)
+                    _lastInserted = _lastInserted?.Previous;
+                _cache.Remove(firstNode.Value.Key);
                 _list.RemoveFirst();
             }
             Insert(key, value);
@@ -68,6 +75,8 @@ public class HashedLinkedList
     private void Update(int key)
     {
         var node = _cache[key];
+        if (_lastInserted == node)
+            _lastInserted = _lastInserted?.Previous;
         node.Value.Update();
 
         // check if this node should be promoted
@@ -75,10 +84,18 @@ public class HashedLinkedList
             && (node.Next.Value.Count < node.Value.Count 
                 || (node.Next.Value.Count == node.Value.Count && node.Next.Value.Timestamp < node.Value.Timestamp)))
         {
+            var swapNode = node.Next;
+            while (swapNode.Next != null
+            && (swapNode.Next.Value.Count < node.Value.Count
+                || (swapNode.Next.Value.Count == node.Value.Count && swapNode.Next.Value.Timestamp < node.Value.Timestamp)))
+                swapNode = swapNode.Next;
             // swap values
-            _cache[node.Value.Key] = node.Next;
-            _cache[node.Next.Value.Key] = node;
-            Swap(node, node.Next);
+            //_cache[node.Value.Key] = swapNode;
+            //_cache[swapNode.Value.Key] = node;
+            _cache[key] = node;
+            _list.Remove(node);
+            _list.AddAfter(swapNode, node);
+            //Swap(node, swapNode);
         } else
             _cache[key] = node;
     }
@@ -86,21 +103,23 @@ public class HashedLinkedList
     private void Insert(int key, int value)
     {
         var node = new LFUNode(key, value, 1, DateTime.Now.Ticks);
-        if (_list.First?.Value.Count == 1)
+        if (_lastInserted != null)
         {
-            var lastNodeWithValueOne = _list.First;
-            while (lastNodeWithValueOne.Next?.Value.Count == 1)
-                lastNodeWithValueOne = lastNodeWithValueOne.Next;
-            _cache[key] = _list.AddAfter(lastNodeWithValueOne, node);
+            _cache[key] = _list.AddAfter(_lastInserted, node);
+            _lastInserted = _cache[key];
         }
         else
         {
             _cache[key] = _list.AddFirst(node);
+            _lastInserted = _list.First;
         }
     }
 
-    public static void Swap(LinkedListNode<LFUNode> first, LinkedListNode<LFUNode> second)
+    public void Swap(LinkedListNode<LFUNode> first, LinkedListNode<LFUNode> second)
     {
+        if (_lastInserted == second)
+            _lastInserted = first;
+
         var tmp = first.Value;
         first.Value = second.Value;
         second.Value = tmp;
