@@ -1,7 +1,7 @@
 ﻿namespace DataStreamProcessing.Q1;
 
-// Accepted solution but low score
-// TODO try using binary search to find pivot
+// 28 ms beats 30.18%
+// 70.74 MB beats 8.66%
 public class KthLargest
 {
     private SortedList<int> _scores;
@@ -37,29 +37,41 @@ public class KthLargest
         public int Add(int val)
         {
             // find the pivot at index p
-            int pivot = 0;
-            bool isLargerFound = false;
-            for (var i = 0; i< _list.Count(); i++)
-            {
-                if (_list[i] >= val)
-                {
-                    pivot = i;
-                    isLargerFound = true;
-                    break;
-                }
-            }
-            // add the new value after index p
-            if (!isLargerFound)
-            {
-                _list.Add(val);                
-            } else
-            {
-                _list.Insert(pivot, val);
-            }
+            int pivot = BinarySearchHigherValue(val);
+            _list.Insert(pivot + 1, val);
             // remove the first element if over capacity
             if (_list.Count() > _capacity)
                 _list.RemoveAt(0);
             return Lowest;
+        }
+
+        private int BinarySearchHigherValue(int val)
+        {
+            int low = 0;
+            int high = _list.Count - 1;
+            //if (high == 0)
+            //    if (_list[0] >= val)
+            //        return -1;
+            //    else
+            //        return 0;
+            while (low <= high)
+            {
+                int mid = low + (high - low) / 2;
+
+                if (_list[mid] == val)
+                {
+                    return mid;
+                }
+                if (_list[mid] > val)
+                {
+                    high = mid - 1;
+                }
+                if (_list[mid] < val)
+                {
+                    low = mid + 1;
+                }
+            }
+            return high;
         }
     }
 }
