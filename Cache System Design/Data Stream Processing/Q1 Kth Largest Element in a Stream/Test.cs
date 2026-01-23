@@ -40,4 +40,20 @@ public class Test
         result = kthLargest.Add(4);      // return 4
         Assert.AreEqual(4, result);
     }
+
+    [TestMethod]
+    public void Test_Case_3()
+    {
+        var kthLargest = new KthLargest(2, new int[] { 0 });
+        var result = kthLargest.Add(-1);  // return -1
+        Assert.AreEqual(-1, result);
+        result = kthLargest.Add(1);      // return 0
+        Assert.AreEqual(0, result);
+        result = kthLargest.Add(-2);     // return 0
+        Assert.AreEqual(0, result);
+        result = kthLargest.Add(-4);      // return 0
+        Assert.AreEqual(0, result);
+        result = kthLargest.Add(3);      // return 1
+        Assert.AreEqual(1, result);
+    }
 }

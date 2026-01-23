@@ -1,57 +1,65 @@
 ﻿namespace DataStreamProcessing.Q1;
 
-// This is an awful solution that I decided to finish out of hilarity and boredom
-// Unsurprisingly, it performs terribly and failed the timeout limit on LeetCode
+// Accepted solution but low score
+// TODO try using binary search to find pivot
 public class KthLargest
 {
-    private SortedSet<double> _scores;
-    private int _k;
-    private Random _random = new Random();
-    private const int halfMax = int.MaxValue / 2;
+    private SortedList<int> _scores;
 
     public KthLargest(int k, int[] nums)
     {
-        List<int> temp = nums.ToList();
-        List<double> nums2 = new List<double>();
-        foreach (var x in nums)
-        {
-            if (temp.Contains(x))
-            {
-                double rnd = _random.Next(0, halfMax);
-                double offset;
-                if (x >= 0)
-                    offset = x + (rnd / (double)int.MaxValue);
-                else
-                    offset = x - (rnd / (double)int.MaxValue);
-                temp.Add(x);
-                nums2.Add(offset);
-            }
-            else
-                { temp.Add(x); nums2.Add(x); }
-        }
-        _scores = new SortedSet<double>(nums2);
-        _k = k;
+        _scores = new SortedList<int>(k, nums);
     }
 
     public int Add(int val)
     {
-        if (_scores.Contains(val))
-        {
-            double rnd = _random.Next(0, halfMax);
-            double offset;
-            if (val >= 0)
-                offset = val + (rnd / (double)int.MaxValue);
-            else
-                offset = val - (rnd / (double)int.MaxValue);
-            _scores.Add(offset);
-        } else
+        if (!_scores.Full || val > _scores.Lowest)
             _scores.Add(val);
-        return (int)_scores.TakeLast(_k).First();
+        return _scores.Lowest;
+    }
+
+    public class SortedList<T>
+    {
+        private int _capacity;
+        private List<int> _list;
+
+        public SortedList(int capacity, int[] nums)
+        {
+            _capacity = capacity;
+            var temp = new List<int>(nums);
+            temp.Sort();
+            _list = temp.TakeLast(capacity).ToList();
+        }
+
+        public int Lowest => _list.First();
+        public bool Full => _list?.Count() >= _capacity;
+
+        public int Add(int val)
+        {
+            // find the pivot at index p
+            int pivot = 0;
+            bool isLargerFound = false;
+            for (var i = 0; i< _list.Count(); i++)
+            {
+                if (_list[i] >= val)
+                {
+                    pivot = i;
+                    isLargerFound = true;
+                    break;
+                }
+            }
+            // add the new value after index p
+            if (!isLargerFound)
+            {
+                _list.Add(val);                
+            } else
+            {
+                _list.Insert(pivot, val);
+            }
+            // remove the first element if over capacity
+            if (_list.Count() > _capacity)
+                _list.RemoveAt(0);
+            return Lowest;
+        }
     }
 }
-
-/**
- * Your KthLargest object will be instantiated and called as such:
- * KthLargest obj = new KthLargest(k, nums);
- * int param_1 = obj.Add(val);
- */
