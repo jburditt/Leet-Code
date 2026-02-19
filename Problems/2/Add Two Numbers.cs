@@ -20,8 +20,6 @@ public class Solution
         bool remainder = false;
         while (true)
         {
-            if (l1 == null)
-                l1 = new ListNode();
             l1.val = (l1?.val ?? 0) + (l2?.val ?? 0);
             if (remainder)
                 l1.val += 1;

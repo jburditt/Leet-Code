@@ -1,5 +1,6 @@
-﻿[TestClass]
-public class _3_Longest_Substring_Without_Repeating_Characters
+﻿namespace Leet_Code.Problems._3_Dict;
+
+public class Solution
 {
     // 14 minutes, beats 24.03%
     public int LengthOfLongestSubstring(string s)
