@@ -8,7 +8,6 @@ public class Solution
     public int LengthOfLongestSubstring(string s)
     {
         var charset = new HashSet<char>();
-        int currentSubstringLength = 0;
         var maxSubstringLength = 0;
         var left = 0;
 
@@ -23,9 +22,7 @@ public class Solution
             }
 
             // save largest window length
-            currentSubstringLength = right - left + 1;
-            if (currentSubstringLength > maxSubstringLength)
-                maxSubstringLength = currentSubstringLength;
+            maxSubstringLength = Math.Max(maxSubstringLength, right - left + 1);
 
             charset.Add(s[right]);
         }
