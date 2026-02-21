@@ -86,6 +86,57 @@ public class Tests
         obj.Query('a').AssertTrue();
         obj.Query('a').AssertTrue();
     }
+
+    [TestMethod]
+    public void Test_Case_6()
+    {
+        string[] words = ["aa", "baa", "baaa", "aaa", "bbbb"];
+        var obj = new StreamChecker(words);
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+
+        obj.Query('b').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('b').AssertTrue();
+
+        //["a"],["b"],["a"],["b"],["a"],["a"],["a"],["a"],["b"],["a"],["a"],["b"],["b"],["b"],["b"],["a"],["b"],["b"],["b"],["a"]
+        //false,false,false,false,false,true,true,true,false,false,true,false,false,false,true,false,false,false,false,false
+    }
 }
 
 
