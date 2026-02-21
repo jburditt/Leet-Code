@@ -34,6 +34,58 @@ public class Tests
         obj.Query('k').AssertFalse();
         obj.Query('l').AssertTrue();
     }
+
+    [TestMethod]
+    public void Test_Case_4()
+    {
+        string[] words = ["ab", "ba", "aaab", "abab", "baa"];
+        var obj = new StreamChecker(words);
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertFalse();
+    }
+
+    [TestMethod]
+    public void Test_Case_5()
+    {
+        string[] words = ["baa", "aa", "aaaa", "abbbb", "aba"];
+        var obj = new StreamChecker(words);
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+    }
 }
 
 
