@@ -4,12 +4,19 @@ public class StreamChecker
 {
     private string[] _words;
     private int[] _wordCharTrackers;
+    //private Queue<char>[] _streams;
     private string[] _streams;
 
     public StreamChecker(string[] words)
     {
         _words = words;
         _wordCharTrackers = new int[words.Length];
+        //_streams = new Queue<char>[words.Length];
+        //for (var i=0; i<_words.Length; i++)
+        //{
+        //    _streams[i] = new Queue<char>(_words[i].Length);
+        //}
+        _streams = new string[words.Length];
     }
 
     public bool Query(char letter)
@@ -19,6 +26,10 @@ public class StreamChecker
         for (var i=0; i < _words.Length; i++)
         {
             // save the stream of characters for the last X amount of characters where X word length
+            //_streams[i].Enqueue(letter);
+            _streams[i] += letter;
+            if (_streams[i].Length > _words[i].Length)
+                _streams[i] = _streams[i].Substring(1);
 
             // keep track of the current letter for this word
             if (_words[i][_wordCharTrackers[i]] == letter)
@@ -62,13 +73,34 @@ public class StreamChecker
                     // stream = ababa
                     // track  = 3
 
+                    // start at the beginning
+                    // start with the second character, 'b'
+                    // check all characters 'baba' prefix 'ababbb'
+                    // next check letter 'a'
+                    // check all characters 'aba' prefix 'ababbb'
+                    // return 3, length of 'aba'
 
+                    for (var j = 1; j < _streams[i].Length; j++)
+                    {
+                        var prefix = _streams[i].Substring(j);
+                        if (_words[i].StartsWith(prefix))
+                        {
+                            _wordCharTrackers[i] = prefix.Length;
+                            //_streams[i] = prefix;
+                            break;
+                        }
+                    }
+
+                    // start at the end
+                    // start with last 'a'
+                    // find the last
                 }
             }
             else
             {
                 _wordCharTrackers[i] = 0;
             }
+            //_streams[i] = string.Empty;
         }
     }
 }
