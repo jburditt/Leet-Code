@@ -80,16 +80,16 @@ public class StreamChecker
                     // check all characters 'aba' prefix 'ababbb'
                     // return 3, length of 'aba'
 
-                    for (var j = 1; j < _streams[i].Length; j++)
-                    {
-                        var prefix = _streams[i].Substring(j);
-                        if (_words[i].StartsWith(prefix))
-                        {
-                            _wordCharTrackers[i] = prefix.Length;
-                            //_streams[i] = prefix;
-                            break;
-                        }
-                    }
+                    //for (var j = 1; j < _streams[i].Length; j++)
+                    //{
+                    //    var prefix = _streams[i].Substring(j);
+                    //    if (_words[i].StartsWith(prefix))
+                    //    {
+                    //        _wordCharTrackers[i] = prefix.Length;
+                    //        //_streams[i] = prefix;
+                    //        break;
+                    //    }
+                    //}
 
                     // start at the end
                     // start with last 'a'
@@ -101,6 +101,17 @@ public class StreamChecker
                 _wordCharTrackers[i] = 0;
             }
             //_streams[i] = string.Empty;
+
+            for (var j = 1; j < _streams[i].Length; j++)
+            {
+                var prefix = _streams[i].Substring(j);
+                if (_words[i].StartsWith(prefix))
+                {
+                    _wordCharTrackers[i] = prefix.Length;
+                    //_streams[i] = prefix;
+                    break;
+                }
+            }
         }
     }
 }

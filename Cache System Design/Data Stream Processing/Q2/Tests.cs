@@ -134,8 +134,94 @@ public class Tests
         obj.Query('b').AssertTrue();
         obj.Query('b').AssertTrue();
 
+        // remaining data, could write more asserts
         //["a"],["b"],["a"],["b"],["a"],["a"],["a"],["a"],["b"],["a"],["a"],["b"],["b"],["b"],["b"],["a"],["b"],["b"],["b"],["a"]
         //false,false,false,false,false,true,true,true,false,false,true,false,false,false,true,false,false,false,false,false
+    }
+
+    [TestMethod]
+    public void Test_Case_7()
+    {
+        string[] words = ["aaa", "abb", "aaaab", "abaa", "baab"];
+        var obj = new StreamChecker(words);
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+
+        //["a"],["b"],["a"],["a"],["b"],["b"],["a"],["a"],["b"],["b"],["a"],["a"],["a"],["a"],["a"],["a"],["b"],["a"],["b"],["a"]
+        //false,false,false,true ,true, true ,false,false,true ,true ,false,false,true ,true ,true ,true ,true ,false,false,false
+
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+
+        //["b"],["a"],["b"],["b"],["b"],["b"],["b"],["a"],["a"],["a"],["b"],["a"],["a"],["a"],["b"],["b"],["a"],["a"],["a"],["b"]
+        //false,false,false,true ,false,false,false,false,false,true ,false,false,true ,true ,false,true ,false,false,true ,false
+
+        obj.Query('b').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertTrue();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('a').AssertTrue();  //["aaa", "abb", "aaaab", "abaa", "baab"]
+        obj.Query('a').AssertTrue();
+        obj.Query('b').AssertFalse();
+        obj.Query('a').AssertFalse();
+        obj.Query('b').AssertFalse();
+
+        //["b"],["b"],["a"],["a"],["a"],["a"],["a"],["a"],["a"],["a"],["a"],["b"],["a"],["b"],["a"],["a"],["a"],["b"],["a"],["b"]
+        //true ,false,false,false,true ,true ,true ,true ,true ,true ,true ,true ,false,false,false,true ,true ,false,false,false
+
+
+        //["a"],["b"],["b"],["b"],["b"],["b"],["b"],["b"],["a"],["a"],["b"],["b"],["a"],["b"],["b"],["b"],["b"],["a"],["b"],["b"]
+        //false,false,true ,false,false,false,false,false,false,false,true ,true ,false,false,true ,false,false,false,false,true
+
+        //["b"],["b"],["a"],["a"],["a"],["a"],["a"],["a"],["a"],["a"],["a"],["b"],["a"],["b"],["a"],["a"],["a"],["b"],["a"],["b"],["a"],["b"],["b"],["b"],["b"],["b"],["b"],["b"],["a"],["a"],["b"],["b"],["a"],["b"],["b"],["b"],["b"],["a"],["b"],["b"]]
+        //true,false,false,false,true,true,true,true,true,true,true,true,false,false,false,true,true,false,false,false,false,false,true,false,false,false,false,false,false,false,true,true,false,false,true,false,false,false,false,true
     }
 }
 
